@@ -1,21 +1,11 @@
 package org.moldeas.pscs.main;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.moldeas.common.loader.resources.FilesResourceLoader;
 import org.moldeas.common.loader.resources.ResourceLoader;
 import org.moldeas.common.utils.POIUtils;
@@ -23,32 +13,28 @@ import org.moldeas.pscs.mappers.CPV2008Mapper;
 import org.moldeas.pscs.to.MappingTO;
 import org.moldeas.pscs.to.PSCTO;
 
-
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-
 import au.com.bytecode.opencsv.CSVReader;
 
-public class AUSCSVMapper {
+public class UKMapper {
 
 	/**
 	 * @param args
-	 * @throws IOException 
 	 */
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception{
 		ResourceLoader loader = new FilesResourceLoader(new String[]{CPV2008Mapper.getSource()});
 		CPV2008Mapper cpv2008mapper = new CPV2008Mapper(loader);
-		String outputDir = "/home/chema/data/mappings/out/aus/";	
-		for(int year = 2007; year<=2012;year++){
-			PrintStream ps = new PrintStream(new FileOutputStream(outputDir+year+"-mapping.csv"));
-			ps.println("Contract ID;CPV2008;confidence");
-			System.out.println("Processing "+"/home/chema/data/mappings/aus/"+year+".csv");
-			CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream("/home/chema/data/mappings/aus/"+year+".csv")),';');
+		String UK_DIR = "/home/chema/data/mappings/uk/";
+		String Uk_OUTPUT_DIR = "/home/chema/data/mappings/out/uk/";
+		for(int year = 2013; year<=2013;year++){
+			PrintStream ps = new PrintStream(new FileOutputStream(Uk_OUTPUT_DIR+year+"-mapping.csv"));
+			ps.println("Transaction Number;CPV2008;confidence");
+			System.out.println("Processing "+UK_DIR+year+".csv");
+			CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(UK_DIR+year+".csv")),';');
 			String [] line;
 			while ((line = reader.readNext()) != null) {
-				String id = line[POIUtils.encode("C")];
-				String code = line[POIUtils.encode("K")];
-				String description = line[POIUtils.encode("L")];	
+				String id = line[POIUtils.encode("G")];
+				String code = line[POIUtils.encode("G")];
+				String description = line[POIUtils.encode("D")];	
 				System.out.println("ID "+id+" Code "+code+" Description "+description);
 				PSCTO current = new PSCTO();
 				current.setUri(id);
