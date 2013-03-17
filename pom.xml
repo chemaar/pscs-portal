@@ -5,7 +5,7 @@
 	<artifactId>pscs</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<name>PSCS WEB Portal</name>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<description>PSCS WEB Portal</description>
 	<properties>
 		<org.springframework.version>2.5</org.springframework.version>
@@ -16,16 +16,16 @@
 
 
 
-<!--Commons-->
+	<!--Commons -->
 	<dependencies>
 
-<!--Mahout-->
-		
-			<dependency> 
-				<groupId>org.apache.mahout</groupId>
-				<artifactId>mahout-core</artifactId> 
-				<version>0.4</version>
-			</dependency>
+		<!--Mahout -->
+
+		<dependency>
+			<groupId>org.apache.mahout</groupId>
+			<artifactId>mahout-core</artifactId>
+			<version>0.4</version>
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -57,7 +57,7 @@
 		</dependency>
 
 
-<!--XML-Proccessing -->
+		<!--XML-Proccessing -->
 		<dependency>
 			<groupId>xalan</groupId>
 			<artifactId>xalan</artifactId>
@@ -74,14 +74,14 @@
 			<version>2.1</version>
 		</dependency>
 
-<!--Spring-->
+		<!--Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring</artifactId>
 			<version>${org.springframework.version}</version>
 		</dependency>
 
-<!--Jena-->
+		<!--Jena -->
 		<dependency>
 			<groupId>com.hp.hpl.jena</groupId>
 			<artifactId>jena</artifactId>
@@ -98,11 +98,32 @@
 			<version>2.0</version>
 		</dependency>
 
-<!--Lucene-->
- 
-  	<dependency>
-		 	<groupId>org.apache.solr</groupId>
-			<artifactId>solr-core</artifactId> 
+		<!-- Apache POI -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.5-beta5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.1</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>net.sf.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>2.0</version>
+		</dependency>
+
+
+		<!--Lucene -->
+
+		<dependency>
+			<groupId>org.apache.solr</groupId>
+			<artifactId>solr-core</artifactId>
 			<version>1.4.1</version>
 		</dependency>
 
@@ -112,55 +133,42 @@
 			<artifactId>lucene-core</artifactId>
 			<version>2.9.0</version>
 		</dependency>
-		
-		
-		<!--
-			<dependency> <groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-ant</artifactId> <version>3.0.3</version>
-			</dependency> <dependency> <groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-bdb-je</artifactId> <version>3.0.3</version>
-			</dependency> <dependency> <groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-collation</artifactId> <version>3.0.3</version>
-			</dependency> <dependency> <groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-contrib</artifactId> <version>3.0.3</version>
-			</dependency> <dependency> <groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-fast-vector-highlighter</artifactId>
-			<version>3.0.3</version> </dependency> <dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-highlighter</artifactId> <version>3.0.3</version>
-			</dependency> <dependency> <groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-instantiated</artifactId> <version>3.0.3</version>
-			</dependency> <dependency> <groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-lucli</artifactId> <version>3.0.3</version>
-			</dependency> <dependency> <groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-memory</artifactId> <version>3.0.3</version>
-			</dependency> <dependency> <groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-misc</artifactId> <version>3.0.3</version>
-			</dependency> <dependency> <groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-queries</artifactId> <version>3.0.3</version>
-			</dependency> <dependency> <groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-queryparser</artifactId> <version>3.0.3</version>
-			</dependency> <dependency> <groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-regex</artifactId> <version>3.0.3</version>
-			</dependency> <dependency> <groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-remote</artifactId> <version>3.0.3</version>
-			</dependency> <dependency> <groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-similarity</artifactId> <version>3.0.3</version>
-			</dependency> <dependency> <groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-snowball</artifactId> <version>3.0.3</version>
-			</dependency> <dependency> <groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-spatial</artifactId> <version>3.0.3</version>
-			</dependency> <dependency> <groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-spellchecker</artifactId> <version>3.0.3</version>
-			</dependency> <dependency> <groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-surround</artifactId> <version>3.0.3</version>
-			</dependency>
-		-->
+
+
+		<!-- <dependency> <groupId>org.apache.lucene</groupId> <artifactId>lucene-ant</artifactId> 
+			<version>3.0.3</version> </dependency> <dependency> <groupId>org.apache.lucene</groupId> 
+			<artifactId>lucene-bdb-je</artifactId> <version>3.0.3</version> </dependency> 
+			<dependency> <groupId>org.apache.lucene</groupId> <artifactId>lucene-collation</artifactId> 
+			<version>3.0.3</version> </dependency> <dependency> <groupId>org.apache.lucene</groupId> 
+			<artifactId>lucene-contrib</artifactId> <version>3.0.3</version> </dependency> 
+			<dependency> <groupId>org.apache.lucene</groupId> <artifactId>lucene-fast-vector-highlighter</artifactId> 
+			<version>3.0.3</version> </dependency> <dependency> <groupId>org.apache.lucene</groupId> 
+			<artifactId>lucene-highlighter</artifactId> <version>3.0.3</version> </dependency> 
+			<dependency> <groupId>org.apache.lucene</groupId> <artifactId>lucene-instantiated</artifactId> 
+			<version>3.0.3</version> </dependency> <dependency> <groupId>org.apache.lucene</groupId> 
+			<artifactId>lucene-lucli</artifactId> <version>3.0.3</version> </dependency> 
+			<dependency> <groupId>org.apache.lucene</groupId> <artifactId>lucene-memory</artifactId> 
+			<version>3.0.3</version> </dependency> <dependency> <groupId>org.apache.lucene</groupId> 
+			<artifactId>lucene-misc</artifactId> <version>3.0.3</version> </dependency> 
+			<dependency> <groupId>org.apache.lucene</groupId> <artifactId>lucene-queries</artifactId> 
+			<version>3.0.3</version> </dependency> <dependency> <groupId>org.apache.lucene</groupId> 
+			<artifactId>lucene-queryparser</artifactId> <version>3.0.3</version> </dependency> 
+			<dependency> <groupId>org.apache.lucene</groupId> <artifactId>lucene-regex</artifactId> 
+			<version>3.0.3</version> </dependency> <dependency> <groupId>org.apache.lucene</groupId> 
+			<artifactId>lucene-remote</artifactId> <version>3.0.3</version> </dependency> 
+			<dependency> <groupId>org.apache.lucene</groupId> <artifactId>lucene-similarity</artifactId> 
+			<version>3.0.3</version> </dependency> <dependency> <groupId>org.apache.lucene</groupId> 
+			<artifactId>lucene-snowball</artifactId> <version>3.0.3</version> </dependency> 
+			<dependency> <groupId>org.apache.lucene</groupId> <artifactId>lucene-spatial</artifactId> 
+			<version>3.0.3</version> </dependency> <dependency> <groupId>org.apache.lucene</groupId> 
+			<artifactId>lucene-spellchecker</artifactId> <version>3.0.3</version> </dependency> 
+			<dependency> <groupId>org.apache.lucene</groupId> <artifactId>lucene-surround</artifactId> 
+			<version>3.0.3</version> </dependency> -->
 	</dependencies>
 
 
 
-<!--Repositorios -->
+	<!--Repositorios -->
 	<repositories>
 		<repository>
 			<id>java.net</id>
@@ -183,22 +191,22 @@
 			<name>JENA Maven Repo</name>
 			<url>http://openjena.org/repo/</url>
 		</repository>
- 	</repositories>
-	  <pluginRepositories>
-	
-	  <pluginRepository>  
-		<id>mc-release</id>  
-		<name>Local Maven repository of releases</name>  
-		<url>http://mc-repo.googlecode.com/svn/maven2/releases</url>  
-		<snapshots>  
-		    <enabled>false</enabled>  
-		</snapshots>  
-		<releases>  
-		    <enabled>true</enabled>  
-		</releases>  
-	    </pluginRepository> 
+	</repositories>
+	<pluginRepositories>
 
-	  </pluginRepositories>
+		<pluginRepository>
+			<id>mc-release</id>
+			<name>Local Maven repository of releases</name>
+			<url>http://mc-repo.googlecode.com/svn/maven2/releases</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</pluginRepository>
+
+	</pluginRepositories>
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
@@ -223,36 +231,17 @@
 			<properties />
 		</developer>
 	</developers>
-	
 
-<!--Build plugins -->
+
+	<!--Build plugins -->
 	<build>
 		<plugins>
-	<!--
-		 	<plugin>  
-				<groupId>com.google.code.maven-license-plugin</groupId>  
-				<artifactId>maven-license-plugin</artifactId>  
-				<configuration>  
-				    <header>src/main/config/copyright.txt</header>  
-					<excludes>  
-						<exclude>**/LICENSE.txt</exclude>  
-						<exclude>**/COPYING.LESSER</exclude>  
-						<exclude>**/COPYING</exclude>  
-						<exclude>**/resources/**</exclude>  
-					    </excludes>  
-					    <mapping>  
-						<jspx>xml</jspx>  
-					    </mapping>  
-					<executions>  
-					    <execution>  
-						<goals>  
-						    <goal>check</goal>  
-						</goals>  
-					    </execution>  
-					</executions>  
-				</configuration>  
-		   	 </plugin>  
--->
+			<!-- <plugin> <groupId>com.google.code.maven-license-plugin</groupId> 
+				<artifactId>maven-license-plugin</artifactId> <configuration> <header>src/main/config/copyright.txt</header> 
+				<excludes> <exclude>**/LICENSE.txt</exclude> <exclude>**/COPYING.LESSER</exclude> 
+				<exclude>**/COPYING</exclude> <exclude>**/resources/**</exclude> </excludes> 
+				<mapping> <jspx>xml</jspx> </mapping> <executions> <execution> <goals> <goal>check</goal> 
+				</goals> </execution> </executions> </configuration> </plugin> -->
 			<plugin>
 				<artifactId>maven-checkstyle-plugin</artifactId>
 			</plugin>
@@ -266,8 +255,8 @@
 					<showDeprecation>true</showDeprecation>
 				</configuration>
 			</plugin>
-      
-      <!-- WEB -->
+
+			<!-- WEB -->
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>maven-jetty-plugin</artifactId>
@@ -282,30 +271,32 @@
 					</connectors>
 				</configuration>
 			</plugin>
-			
-		<plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <version>2.3</version>
-            <executions>
-                <execution>
-                    <phase>package</phase>
-                    <goals><goal>copy</goal></goals>
-                    <configuration>
-                        <artifactItems>
-                            <artifactItem>
-                                <groupId>org.mortbay.jetty</groupId>
-                                <artifactId>jetty-runner</artifactId>
-                                <version>7.5.4.v20111024</version>
-                                <destFileName>jetty-runner.jar</destFileName>
-                            </artifactItem>
-                        </artifactItems>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
-			
-			
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.mortbay.jetty</groupId>
+									<artifactId>jetty-runner</artifactId>
+									<version>7.5.4.v20111024</version>
+									<destFileName>jetty-runner.jar</destFileName>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>tomcat-maven-plugin</artifactId>
@@ -314,27 +305,27 @@
 
 
 			<plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-dependency-plugin</artifactId>
-			    <version>2.4</version>
-			    <executions>
-				<execution>
-				    <phase>package</phase>
-				    <goals>
-					<goal>copy</goal>
-				    </goals>
-				    <configuration>
-					<artifactItems>
-					    <artifactItem>
-						<groupId>com.github.jsimone</groupId>
-						<artifactId>webapp-runner</artifactId>
-						<version>7.0.27.1</version>
-						<destFileName>webapp-runner.jar</destFileName>
-					    </artifactItem>
-					</artifactItems>
-				    </configuration>
-				</execution>
-			    </executions>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.4</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>com.github.jsimone</groupId>
+									<artifactId>webapp-runner</artifactId>
+									<version>7.0.27.1</version>
+									<destFileName>webapp-runner.jar</destFileName>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

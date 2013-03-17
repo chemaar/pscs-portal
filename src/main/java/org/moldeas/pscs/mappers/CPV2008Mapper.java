@@ -108,9 +108,37 @@ public class CPV2008Mapper {
 		}		
 		return cpvPSCTOs;
 	}
-	
+	public List<MappingTO> createMappings(PSCTO pscTO){
+		List<MappingTO> mappings = new LinkedList<MappingTO>();		
+		try {
+			IndexSearcher indexSearcher = new IndexSearcher(this.idx);		
+			logger.debug("Searching "+pscTO);
+			List<ScoreDoc> matchPSCTOs = new LinkedList<ScoreDoc>();
+			String prefLabel = pscTO.getPrefLabel();
+			ScoreDoc[] scoreDocs = fetchSearchResults(
+					createQueryFromString(CPV2008Mapper.cleanPrefLabel(prefLabel)), indexSearcher, 3);
+			for(int i = 0; i<scoreDocs.length;i++){
+				Document doc = indexSearcher.doc(scoreDocs[i].doc);
+				String uriTO = doc.getField(MAPPER_FIELD_URI).stringValue();
+				MappingTO mapping = new MappingTO();
+				mapping.setFrom(pscTO);
+				mapping.setTo(this.cpv2008.get(uriTO));
+				mapping.setConfidence(scoreDocs[i].score);
+				mappings.add(mapping);
+				logger.debug("Added mapping "+mapping);
+			}
+		} catch (Exception e) {
+			logger.error(e);
+		}finally{
+
+		}
+		return mappings;
+	}
+
+
 	public List<MappingTO> createMappings(List<PSCTO> pscTOs){
 		List<MappingTO> mappings = new LinkedList<MappingTO>();		
+		//FIXME: to optimize indexsearcher no delegate call
 		try {
 			IndexSearcher indexSearcher = new IndexSearcher(this.idx);		
 			for(PSCTO pscTO:pscTOs){
@@ -133,7 +161,7 @@ public class CPV2008Mapper {
 		} catch (Exception e) {
 			logger.error(e);
 		}finally{
-			
+
 		}
 		return mappings;
 	}
