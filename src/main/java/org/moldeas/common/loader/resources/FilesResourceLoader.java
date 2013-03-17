@@ -1,10 +1,10 @@
 package org.moldeas.common.loader.resources;
 
+import org.moldeas.common.exceptions.MoldeasModelException;
+import org.moldeas.common.exceptions.ResourceNotFoundException;
 import org.moldeas.common.pk.KnowledgeSourcePK;
-import org.moldeas.commons.exceptions.MoldeasModelException;
-import org.moldeas.commons.exceptions.ResourceNotFoundException;
-import org.moldeas.commons.to.KnowledgeResourcesTO;
-import org.moldeas.commons.utils.DocumentBuilderHelper;
+import org.moldeas.common.to.KnowledgeResourcesTO;
+import org.moldeas.common.utils.DocumentBuilderHelper;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;

@@ -39,10 +39,10 @@ import com.hp.hpl.jena.ontology.OntModelSpec;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
+import org.moldeas.common.exceptions.MoldeasModelException;
+import org.moldeas.common.exceptions.ResourceNotFoundException;
 import org.moldeas.common.loader.resources.ResourceLoader;
-import org.moldeas.commons.exceptions.MoldeasModelException;
-import org.moldeas.commons.exceptions.ResourceNotFoundException;
-import org.moldeas.commons.to.KnowledgeResourcesTO;
+import org.moldeas.common.to.KnowledgeResourcesTO;
 
 /**
  *

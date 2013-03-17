@@ -31,11 +31,11 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.log4j.Logger;
+import org.moldeas.common.exceptions.MoldeasModelException;
+import org.moldeas.common.exceptions.ResourceNotFoundException;
 import org.moldeas.common.loader.resources.ResourceLoader;
+import org.moldeas.common.to.KnowledgeResourcesTO;
 //import org.mindswap.pellet.jena.PelletReasonerFactory;
-import org.moldeas.commons.exceptions.MoldeasModelException;
-import org.moldeas.commons.exceptions.ResourceNotFoundException;
-import org.moldeas.commons.to.KnowledgeResourcesTO;
 
 import com.hp.hpl.jena.ontology.OntDocumentManager;
 import com.hp.hpl.jena.ontology.OntModel;

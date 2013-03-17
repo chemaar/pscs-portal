@@ -1,7 +1,7 @@
 package org.moldeas.common.loader.resources;
 
-import org.moldeas.commons.exceptions.ResourceNotFoundException;
-import org.moldeas.commons.to.KnowledgeResourcesTO;
+import org.moldeas.common.exceptions.ResourceNotFoundException;
+import org.moldeas.common.to.KnowledgeResourcesTO;
 import org.w3c.dom.Document;
 
 

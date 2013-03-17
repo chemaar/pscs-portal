@@ -3,10 +3,10 @@ package org.moldeas.common.loader.resources;
 import java.io.ByteArrayInputStream;
 import java.util.logging.Level;
 
-import org.moldeas.commons.exceptions.DocumentBuilderException;
-import org.moldeas.commons.exceptions.ResourceNotFoundException;
-import org.moldeas.commons.to.KnowledgeResourcesTO;
-import org.moldeas.commons.utils.DocumentBuilderHelper;
+import org.moldeas.common.exceptions.DocumentBuilderException;
+import org.moldeas.common.exceptions.ResourceNotFoundException;
+import org.moldeas.common.to.KnowledgeResourcesTO;
+import org.moldeas.common.utils.DocumentBuilderHelper;
 
 import java.io.InputStream;
 
