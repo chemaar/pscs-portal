@@ -24,6 +24,8 @@ import org.moldeas.common.utils.POIUtils;
 import org.moldeas.pscs.mappers.CPV2008Mapper;
 import org.moldeas.pscs.to.MappingTO;
 import org.moldeas.pscs.to.PSCTO;
+import org.moldeas.pscs.to.SupplierMappingTO;
+import org.moldeas.pscs.to.SupplierTO;
 
 
 import com.hp.hpl.jena.rdf.model.Model;
@@ -43,6 +45,7 @@ public class AUSCSVMapper {
 		ResourceLoader loader = new FilesResourceLoader(new String[]{CPV2008Mapper.getSource()});
 		Map<String,String> unspscCodes = load();
 		CPV2008Mapper cpv2008mapper = new CPV2008Mapper(loader);
+		SupplierUtils utils = new SupplierUtils();
 		String outputDir = "/home/chema/data/mappings/out/aus/";	
 		for(int year = 2004; year<=2012;year++){ //from 2004-2006 to 2007-2012
 			PrintStream ps = new PrintStream(new FileOutputStream(outputDir+year+"-mapping.csv"));
@@ -76,11 +79,14 @@ public class AUSCSVMapper {
 				}else{
 					mappings = new LinkedList<MappingTO>();
 				}
+				SupplierTO supplierTO = new SupplierTO(supplier.split(" ")[0], supplier, "http://myexample.org/"+supplier);
+				//List<SupplierMappingTO> supplierMapping = utils.createMappings(supplierTO);
+				//It only returns 1
 				for(MappingTO mapping:mappings){
 					ps.println(
 							format(id)+SEPARATOR+
 							format(description)+SEPARATOR+
-							format(supplier)+SEPARATOR+
+							format(supplierTO.getLabel())+SEPARATOR+
 							format(code)+SEPARATOR+
 							format(title)+SEPARATOR+
 							format(mapping.getTo().getPrefLabel())+SEPARATOR+
