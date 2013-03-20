@@ -4,7 +4,7 @@ public class MappingTO {
 
 	private PSCTO from;
 	private PSCTO to;
-	private double confidence;
+	private double confidence = -1.0;
 	public PSCTO getFrom() {
 		return from;
 	}
@@ -12,6 +12,9 @@ public class MappingTO {
 		this.from = from;
 	}
 	public PSCTO getTo() {
+		if(to == null){
+			this.to = new PSCTO();
+		}
 		return to;
 	}
 	public void setTo(PSCTO to) {

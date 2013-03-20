@@ -25,24 +25,36 @@ public class UKMapper {
 		CPV2008Mapper cpv2008mapper = new CPV2008Mapper(loader);
 		String UK_DIR = "/home/chema/data/mappings/uk/";
 		String Uk_OUTPUT_DIR = "/home/chema/data/mappings/out/uk/";
-		for(int year = 2013; year<=2013;year++){
+		for(int year = 2013; year<=2013;year++){//2013 is not really 2013 is a part
 			PrintStream ps = new PrintStream(new FileOutputStream(Uk_OUTPUT_DIR+year+"-mapping.csv"));
-			ps.println("Transaction Number;CPV2008;confidence");
+			ps.println("Contract ID#Description#Supplier#UNSPSC code#Title#CPV2008#CPV2008 code#confidence");
 			System.out.println("Processing "+UK_DIR+year+".csv");
-			CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(UK_DIR+year+".csv")),';');
-			String [] line;
+			CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(UK_DIR+year+".csv")),'\t');//2012 \t and 2013 ;
+			String [] line = reader.readNext();//skip first line
 			while ((line = reader.readNext()) != null) {
+				//For 2013
 				String id = line[POIUtils.encode("G")];
+				String description = line[POIUtils.encode("D")]+" "+line[POIUtils.encode("E")];
+				String supplier = line[POIUtils.encode("F")];
+				String title = description;				
 				String code = line[POIUtils.encode("G")];
-				String description = line[POIUtils.encode("D")];	
-				System.out.println("ID "+id+" Code "+code+" Description "+description);
+				
+				System.out.println("ID "+id+" Code "+code+" description "+description+" supplier "+ supplier);
 				PSCTO current = new PSCTO();
 				current.setUri(id);
 				current.setPrefLabel(description);
 				current.setSubject(code);
 				List<MappingTO> mappings = cpv2008mapper.createMappings(current);
 				for(MappingTO mapping:mappings){
-					ps.println(mapping.getFrom().getUri()+";"+mapping.getTo().getUri()+";"+mapping.getConfidence());
+					ps.println(
+							AUSCSVMapper.format(id)+AUSCSVMapper.SEPARATOR+
+						    AUSCSVMapper.format(description)+AUSCSVMapper.SEPARATOR+
+						    AUSCSVMapper.format(supplier)+AUSCSVMapper.SEPARATOR+
+						    AUSCSVMapper.format(code)+AUSCSVMapper.SEPARATOR+
+						    AUSCSVMapper.format(title)+AUSCSVMapper.SEPARATOR+
+						    AUSCSVMapper.format(mapping.getTo().getPrefLabel())+AUSCSVMapper.SEPARATOR+
+							AUSCSVMapper.format(mapping.getTo().getUri())+AUSCSVMapper.SEPARATOR+
+							AUSCSVMapper.format(String.valueOf(mapping.getConfidence())));
 				}
 			}
 			reader.close();

@@ -18,7 +18,7 @@ public class CPV2008MapperTest {
 	public void testLoad() {
 		ResourceLoader loader = new FilesResourceLoader(new String[]{CPV2008Mapper.getSource()});
 		CPV2008Mapper cpv2008mapper = new CPV2008Mapper(loader);
-		assertEquals(0, cpv2008mapper.createMappings(null).size());
+		assertEquals(0, cpv2008mapper.createMappings(new PSCTO()).size());
 	}
 	@Test
 	public void testMapping(){

@@ -70,22 +70,32 @@ public class USAMapper {
 		String USA_OUTPUT_DIR = "/home/chema/data/mappings/out/usa/";
 		for(int year = 2011; year<=2014;year++){
 			PrintStream ps = new PrintStream(new FileOutputStream(USA_OUTPUT_DIR+year+"-mapping.csv"));
-			ps.println("Contract ID;CPV2008;confidence");
+			ps.println("Contract ID#Agency#Supplier#NAICS code#NAICS#CPV2008#CPV2008 code#confidence");
 			System.out.println("Processing "+USA_DIR+year+".csv");
 			CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(USA_DIR+year+".csv")),',');
-			String [] line;
+			String [] line = reader.readNext();//skip first line
 			while ((line = reader.readNext()) != null) {
 				String id = line[POIUtils.encode("A")];
 				String code = line[POIUtils.encode("AM")];
-				String description = line[POIUtils.encode("AN")];	
-				System.out.println("ID "+id+" Code "+code+" Description "+description);
+				String description = line[POIUtils.encode("S")] ;
+				String supplier = "";
+				String title = line[POIUtils.encode("AN")];
+				System.out.println("ID "+id+" Code "+code+" Title "+title);
 				PSCTO current = new PSCTO();
 				current.setUri(id);
-				current.setPrefLabel(description);
+				current.setPrefLabel(title);
 				current.setSubject(code);
 				List<MappingTO> mappings = cpv2008mapper.createMappings(current);
-				for(MappingTO mapping:mappings){
-					ps.println(mapping.getFrom().getUri()+";"+mapping.getTo().getUri()+";"+mapping.getConfidence());
+				for(MappingTO mapping:mappings){					
+					ps.println(
+							AUSCSVMapper.format(id)+AUSCSVMapper.SEPARATOR+
+						    AUSCSVMapper.format(description)+AUSCSVMapper.SEPARATOR+
+						    AUSCSVMapper.format(supplier)+AUSCSVMapper.SEPARATOR+
+						    AUSCSVMapper.format(code)+AUSCSVMapper.SEPARATOR+
+						    AUSCSVMapper.format(title)+AUSCSVMapper.SEPARATOR+
+						    AUSCSVMapper.format(mapping.getTo().getPrefLabel())+AUSCSVMapper.SEPARATOR+
+							AUSCSVMapper.format(mapping.getTo().getUri())+AUSCSVMapper.SEPARATOR+
+							AUSCSVMapper.format(String.valueOf(mapping.getConfidence())));					
 				}
 			}
 			reader.close();

@@ -74,6 +74,7 @@ public class CPV2008Mapper {
 		IndexWriter indexWriter = 
 				new IndexWriter(idx,standardAnalyzer,create,
 						deletionPolicy,IndexWriter.MaxFieldLength.UNLIMITED);
+		System.out.println("INDEXING "+pscTOs.size()+" ");
 		for(PSCTO pscTO:pscTOs){
 			Field uriField = new Field(MAPPER_FIELD_URI,pscTO.getUri(),Field.Store.YES,Field.Index.NOT_ANALYZED);
 			Field subjectField = new Field(MAPPER_FIELD_PREF_LABEL,pscTO.getPrefLabel(),Field.Store.YES,Field.Index.ANALYZED);
@@ -81,7 +82,6 @@ public class CPV2008Mapper {
 			doc.add(uriField);
 			doc.add(subjectField);
 			indexWriter.addDocument(doc);
-			logger.debug("Indexing "+pscTO);
 		}
 		indexWriter.optimize();
 		indexWriter.close();
@@ -128,6 +128,7 @@ public class CPV2008Mapper {
 				logger.debug("Added mapping "+mapping);
 			}
 		} catch (Exception e) {
+			logger.error("Processing "+pscTO);
 			logger.error(e);
 		}finally{
 
@@ -139,9 +140,10 @@ public class CPV2008Mapper {
 	public List<MappingTO> createMappings(List<PSCTO> pscTOs){
 		List<MappingTO> mappings = new LinkedList<MappingTO>();		
 		//FIXME: to optimize indexsearcher no delegate call
-		try {
-			IndexSearcher indexSearcher = new IndexSearcher(this.idx);		
-			for(PSCTO pscTO:pscTOs){
+		for(PSCTO pscTO:pscTOs){
+			try {
+				IndexSearcher indexSearcher = new IndexSearcher(this.idx);		
+
 				logger.debug("Searching "+pscTO);
 				List<ScoreDoc> matchPSCTOs = new LinkedList<ScoreDoc>();
 				String prefLabel = pscTO.getPrefLabel();
@@ -156,12 +158,13 @@ public class CPV2008Mapper {
 					mapping.setConfidence(scoreDocs[i].score);
 					mappings.add(mapping);
 					logger.debug("Added mapping "+mapping);
-				}
-			}
-		} catch (Exception e) {
-			logger.error(e);
-		}finally{
+					}
+			} catch (Exception e) {
+				logger.error(pscTO.getUri());
+				logger.error(e);
+			}finally{
 
+			}
 		}
 		return mappings;
 	}
