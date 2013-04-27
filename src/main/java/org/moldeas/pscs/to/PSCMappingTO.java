@@ -1,6 +1,18 @@
 package org.moldeas.pscs.to;
 
-public class MappingTO {
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
+@XmlRootElement(name = "pscMappingTO")
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "pscMappingTO", propOrder = {
+    "from",
+    "to",
+    "confidence"
+})
+public class PSCMappingTO {
 
 	private PSCTO from;
 	private PSCTO to;
@@ -26,13 +38,13 @@ public class MappingTO {
 	public void setConfidence(double confidence) {
 		this.confidence = confidence;
 	}
-	public MappingTO(PSCTO from, PSCTO to, double confidence) {
+	public PSCMappingTO(PSCTO from, PSCTO to, double confidence) {
 		super();
 		this.from = from;
 		this.to = to;
 		this.confidence = confidence;
 	}
-	public MappingTO() {
+	public PSCMappingTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}

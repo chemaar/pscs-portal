@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+	<bean id="ResourcesCPVFileDAO" class="org.moldeas.common.loader.resources.FilesResourceLoader"
+		lazy-init="true">
+		<constructor-arg>
+		  <list>
+     		<value>cpv/cpv-2008.ttl</value>
+  		 </list>
+		</constructor-arg>
+	</bean>
+	
+	
+	<bean id="PSCMapper" class="org.moldeas.pscs.mappers.CPV2008Mapper"
+		lazy-init="true">
+		<constructor-arg index="0">
+			<ref bean="ResourcesCPVFileDAO" />
+		</constructor-arg>
+	</bean>
+	
+	
+	<bean id="SupplierMapper" class="org.moldeas.pscs.mappers.AUSSupplierMapper"
+		lazy-init="true">
+		<constructor-arg index="0" type="java.lang.String" value="suppliers/supplier-unified-names.csv"/>
+		<constructor-arg index="1" type="java.lang.String" value="#"/>
+	</bean>
+	
+	
+	
+	
+</beans>

@@ -1,8 +1,6 @@
 package org.moldeas.pscs.mappers;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -28,14 +26,12 @@ import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.RAMDirectory;
 import org.moldeas.common.exceptions.MoldeasModelException;
 import org.moldeas.common.loader.JenaRDFModelWrapper;
-import org.moldeas.common.loader.resources.ExternalizeFilesResourceLoader;
-import org.moldeas.common.loader.resources.FilesResourceLoader;
 import org.moldeas.common.loader.resources.ResourceLoader;
+import org.moldeas.common.utils.MappingConstants;
 import org.moldeas.common.utils.PSCConstants;
 import org.moldeas.pscs.analyzers.PSCAnalyzer;
-import org.moldeas.pscs.to.MappingTO;
+import org.moldeas.pscs.to.PSCMappingTO;
 import org.moldeas.pscs.to.PSCTO;
-
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -44,13 +40,11 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.SimpleSelector;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.vocabulary.DC;
 
-public class CPV2008Mapper {
-	private static final String MAPPER_FIELD_PREF_LABEL = "prefLabel";
-
-	private static final String MAPPER_FIELD_URI = "uri";
-
+public class CPV2008Mapper implements PSCMapper {
 	protected static Logger logger = Logger.getLogger(CPV2008Mapper.class);
+	public static final String MAPPER_FIELD_PREF_LABEL = "prefLabel";
 
 	RAMDirectory idx;
 	Analyzer standardAnalyzer;
@@ -74,9 +68,8 @@ public class CPV2008Mapper {
 		IndexWriter indexWriter = 
 				new IndexWriter(idx,standardAnalyzer,create,
 						deletionPolicy,IndexWriter.MaxFieldLength.UNLIMITED);
-		System.out.println("INDEXING "+pscTOs.size()+" ");
 		for(PSCTO pscTO:pscTOs){
-			Field uriField = new Field(MAPPER_FIELD_URI,pscTO.getUri(),Field.Store.YES,Field.Index.NOT_ANALYZED);
+			Field uriField = new Field(MappingConstants.MAPPER_FIELD_URI,pscTO.getUri(),Field.Store.YES,Field.Index.NOT_ANALYZED);
 			Field subjectField = new Field(MAPPER_FIELD_PREF_LABEL,pscTO.getPrefLabel(),Field.Store.YES,Field.Index.ANALYZED);
 			Document doc = new Document();
 			doc.add(uriField);
@@ -91,25 +84,35 @@ public class CPV2008Mapper {
 		JenaRDFModelWrapper rdfModel = new JenaRDFModelWrapper(loader,"TURTLE");
 		Model model = (Model) rdfModel.getModel();		
 		ResIterator it = model.listResourcesWithProperty(model.getProperty(PSCConstants.SKOS_prefLabel));
+		
 		while (it.hasNext()){
 			PSCTO current = new PSCTO();
 			Resource r = it.next();
-			StmtIterator iter = model.listStatements(
-					new SimpleSelector(r, model.getProperty(PSCConstants.SKOS_prefLabel), (RDFNode) null) {
-						public boolean selects(Statement s)
-						{return s.getLiteral().getLanguage().equalsIgnoreCase("en");}
-					});	
-			while (iter.hasNext()){
-				current.setUri(r.getURI());
-				current.setPrefLabel(iter.next().getString());
+			StmtIterator iter1 = model.listStatements(
+					new SimpleSelector(r, DC.identifier, (RDFNode) null) {
+						public boolean selects(Statement s){	
+							return !(s.getLiteral().getString().matches("^[A-Z]+.*$"));
+						}
+						});	
+			while(iter1.hasNext()){	
+				StmtIterator iter = model.listStatements(
+						new SimpleSelector(r, model.getProperty(PSCConstants.SKOS_prefLabel), (RDFNode) null) {
+							public boolean selects(Statement s)
+							{return s.getLiteral().getLanguage().equalsIgnoreCase("en");}
+						});	
+				while (iter.hasNext()){
+					current.setUri(r.getURI());
+					current.setPrefLabel(iter.next().getString());
+				}
+				logger.info("Loaded "+current);
+				cpvPSCTOs.put(current.getUri(),current);
+				iter1.next();
 			}
-			logger.debug("Loaded "+current);
-			cpvPSCTOs.put(current.getUri(),current);
 		}		
 		return cpvPSCTOs;
 	}
-	public List<MappingTO> createMappings(PSCTO pscTO){
-		List<MappingTO> mappings = new LinkedList<MappingTO>();		
+	public List<PSCMappingTO> createMappings(PSCTO pscTO){
+		List<PSCMappingTO> mappings = new LinkedList<PSCMappingTO>();		
 		try {
 			IndexSearcher indexSearcher = new IndexSearcher(this.idx);		
 			logger.debug("Searching "+pscTO);
@@ -119,8 +122,8 @@ public class CPV2008Mapper {
 					createQueryFromString(CPV2008Mapper.cleanPrefLabel(prefLabel)), indexSearcher, 3);
 			for(int i = 0; i<scoreDocs.length;i++){
 				Document doc = indexSearcher.doc(scoreDocs[i].doc);
-				String uriTO = doc.getField(MAPPER_FIELD_URI).stringValue();
-				MappingTO mapping = new MappingTO();
+				String uriTO = doc.getField(MappingConstants.MAPPER_FIELD_URI).stringValue();
+				PSCMappingTO mapping = new PSCMappingTO();
 				mapping.setFrom(pscTO);
 				mapping.setTo(this.cpv2008.get(uriTO));
 				mapping.setConfidence(scoreDocs[i].score);
@@ -137,8 +140,8 @@ public class CPV2008Mapper {
 	}
 
 
-	public List<MappingTO> createMappings(List<PSCTO> pscTOs){
-		List<MappingTO> mappings = new LinkedList<MappingTO>();		
+	public List<PSCMappingTO> createMappings(List<PSCTO> pscTOs){
+		List<PSCMappingTO> mappings = new LinkedList<PSCMappingTO>();		
 		//FIXME: to optimize indexsearcher no delegate call
 		for(PSCTO pscTO:pscTOs){
 			try {
@@ -151,14 +154,14 @@ public class CPV2008Mapper {
 						createQueryFromString(CPV2008Mapper.cleanPrefLabel(prefLabel)), indexSearcher, 3);
 				for(int i = 0; i<scoreDocs.length;i++){
 					Document doc = indexSearcher.doc(scoreDocs[i].doc);
-					String uriTO = doc.getField(MAPPER_FIELD_URI).stringValue();
-					MappingTO mapping = new MappingTO();
+					String uriTO = doc.getField(MappingConstants.MAPPER_FIELD_URI).stringValue();
+					PSCMappingTO mapping = new PSCMappingTO();
 					mapping.setFrom(pscTO);
 					mapping.setTo(this.cpv2008.get(uriTO));
 					mapping.setConfidence(scoreDocs[i].score);
 					mappings.add(mapping);
 					logger.debug("Added mapping "+mapping);
-					}
+				}
 			} catch (Exception e) {
 				logger.error(pscTO.getUri());
 				logger.error(e);
@@ -178,10 +181,80 @@ public class CPV2008Mapper {
 		QueryParser parser = new QueryParser(MAPPER_FIELD_PREF_LABEL,
 				new PSCAnalyzer());
 		parser.setDefaultOperator(QueryParser.Operator.OR);
-		return parser.parse(q);
-	}
 
-	private static ScoreDoc[] fetchSearchResults(Query query, Searcher indexSearcher, int n ){
+		return parser.parse(QueryParser.escape(q));
+	}
+//
+//	//FIXME: Does not work
+//	public static Query createTermQueryFromString(String key, String q) throws ParseException {		
+//		Term keyTerm = new Term("key", key);
+//		TermQuery keyTermQuery = new TermQuery(keyTerm);
+//		
+//		Term rawTerm = new Term(MAPPER_FIELD_PREF_LABEL, q);
+//
+//		SpanFirstQuery spanFirstQuery = new SpanFirstQuery(new SpanTermQuery(rawTerm), 1);
+//
+////		BooleanQuery booleanQuery = new BooleanQuery();
+////		booleanQuery.add(new BooleanClause(keyTermQuery, BooleanClause.Occur.SHOULD));
+////		booleanQuery.add(new BooleanClause(spanFirstQuery, BooleanClause.Occur.SHOULD));
+//		System.out.println("From "+q+" created "+spanFirstQuery);
+//		return spanFirstQuery;
+//
+//	}
+//	
+//	//FIXME
+//	public static Query createKeyTermQueryFromString(String key) throws ParseException {		
+//		QueryParser parser = new QueryParser("key",
+//				new PSCAnalyzer());
+//		parser.setDefaultOperator(QueryParser.Operator.OR);
+//		return parser.parse(QueryParser.escape(key));
+//
+//	}
+	
+	
+
+//	public static ScoreDoc test(String cleanPrefLabel, Searcher indexSearcher) throws CorruptIndexException, IOException, ParseException{
+//		String key = StringUtils.capitalize(cleanPrefLabel.split(" ")[0]);
+//		ScoreDoc scoreDoc = null;
+//		//First try normal fetch
+//		try{
+//			ScoreDoc[] scoreDocs = fetchSearchResults(
+//					createQueryFromString(cleanPrefLabel), 
+//					indexSearcher, 1);
+//			 scoreDoc = filterCheckResults(
+//					key,
+//					scoreDocs, 
+//					indexSearcher);
+//			if(scoreDoc == null){
+//				scoreDoc = filterCheckResults(key,fetchSearchResults(
+//								createKeyTermQueryFromString(key), 
+//								indexSearcher, 1), 
+//								indexSearcher);
+//			}
+//		}catch(ParseException e){
+//			scoreDoc = filterCheckResults(key,fetchSearchResults(
+//					createKeyTermQueryFromString(key), 
+//					indexSearcher, 1), 
+//					indexSearcher);
+//		}
+//		
+//		return scoreDoc;
+//	}
+
+//	private static ScoreDoc filterCheckResults (String key,ScoreDoc[] scoreDocs, Searcher indexSearcher ) throws CorruptIndexException, IOException{
+//		ScoreDoc result = null;
+//		//System.out.println("FILTERING "+scoreDocs.length);
+//		for(int i = 0; i<scoreDocs.length;i++){
+//			Document doc = indexSearcher.doc(scoreDocs[i].doc);
+//			String keyTO = doc.getField("key").stringValue();
+//			if(keyTO.equalsIgnoreCase(key)){
+//				result =  scoreDocs[i];
+//			}
+//		}
+//		return result;
+//	}
+
+	public static ScoreDoc[] fetchSearchResults(Query query, Searcher indexSearcher, int n ){
 		try{
 			TopScoreDocCollector collector = TopScoreDocCollector.create(n, true);
 			indexSearcher.search(query, collector);
@@ -200,6 +273,15 @@ public class CPV2008Mapper {
 		value = value.replaceAll("í", "i");
 		value = value.replaceAll("ó", "o");
 		value = value.replaceAll("ú", "u");
+		value = value.replaceAll("/", "");
+		value = value.replaceAll("'", "");
+		value = value.replaceAll("&", " ");
+		value = value.replaceAll("\r", " ");
+		value = value.replaceAll("\n", " ");
+		value = value.replaceAll("\n\r", " ");
+		value = value.replaceAll("\u0085", " ");
+		value = value.replaceAll("\u2028", " ");
+		value = value.replaceAll("\u2029", " ");
 		value = value.replaceAll("\\W", " ").replaceAll("\\d", "");
 		return value;
 	}
