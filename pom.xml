@@ -5,7 +5,7 @@
 	<artifactId>pscs</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<name>PSCS WEB Portal</name>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 	<description>PSCS WEB Portal</description>
 	<properties>
 		<org.springframework.version>2.5</org.springframework.version>
@@ -206,7 +206,7 @@
 			      <configuration>
 				<archive>
 				  <manifest>
-				    <mainClass>fully.qualified.MainClass</mainClass>
+				    <mainClass>main.MainCPV2008Mapper</mainClass>
 				  </manifest>
 				</archive>
 				<descriptorRefs>
