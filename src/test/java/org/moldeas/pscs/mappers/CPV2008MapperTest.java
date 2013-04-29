@@ -20,7 +20,7 @@ public class CPV2008MapperTest {
 		CPV2008Mapper cpv2008mapper = new CPV2008Mapper(loader);
 		assertEquals(0, cpv2008mapper.createMappings(new PSCTO()).size());
 	}
-	@Test
+	//@Test
 	public void testMapping(){
 		PSCTO from = new PSCTO();
 		from.setUri("http://moldeas.org/p1");

@@ -1,10 +1,7 @@
-package org.moldeas.pscs.services;
+
 
 import java.io.IOException;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.ProduceMime;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -20,25 +17,22 @@ import org.moldeas.pscs.to.SupplierTO;
 
 
 
-@Path("/mapping")
-public class MapperServiceRest {
+
+public class MapperService {
 
 	private static final String SUPPLIER_UNIFIED_NAMES_CSV = "suppliers/supplier-unified-names.csv";
 
 	private PSCMapper cpv2008mapper;
 	private SupplierMapper supplierMapper;
 
-	public MapperServiceRest() throws IOException{
+	public MapperService() throws IOException{
 		this.cpv2008mapper  = (PSCMapper) 
 				ApplicationContextLocator.getApplicationContext().getBean(PSCMapper.class.getSimpleName());
 		this.supplierMapper = (SupplierMapper) 
 				ApplicationContextLocator.getApplicationContext().getBean(SupplierMapper.class.getSimpleName());
 	}
 
-	@GET
-	@Path("cpv2008")
-	@ProduceMime({"text/plain", "application/xml", "application/json"})
-	public ListMappingTO cpv2008(@QueryParam("label") String label){	 
+	public ListMappingTO cpv2008(String label){	 
 		try{
 			PSCTO pscTO = new PSCTO(MappingConstants.FAKE_URI_FROM+label);
 			pscTO.setPrefLabel(label);
@@ -49,9 +43,6 @@ public class MapperServiceRest {
 		
 	}
 	
-	@GET
-	@Path("supplier")
-	@ProduceMime({"text/plain", "application/xml", "application/json"})
 	public SupplierMappingTO aus(@QueryParam("label") String label){	 
 		try{
 			//FIXME: get(0)

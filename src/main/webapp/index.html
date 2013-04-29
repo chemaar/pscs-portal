@@ -3,6 +3,42 @@
 	<title>PSCS Portal</title>
 </head>
 <body>
-	<h1>PSCS Portal</h1>
+	<h1>Examples of using mappers</h1>
+	<p>Two kind of simple mappers can be found as a REST services:</p>
+	<ul>
+		<li>
+			<p>CPV 2008 mapper that takes as a parameter a label and returns 3 mappings.</p>
+			<ul>
+			<li>The URL to query the REST the service is: <em>%APP_URL%/services/mapping/cpv2008?label=param</em>
+			<li>Local example: <a href="./services/mapping/cpv2008?label=Services">Search for "Services"</a>
+			</li>
+			<li>Remote example: <a href="http://pscs-portal.herokuapp.com/services/mapping/cpv2008?label=Services">
+			http://pscs-portal.herokuapp.com/services/mapping/cpv2008?label=Services</a>
+			</li>
+			</ul>		
+		</li>
+		<li>
+			<p>Australia suppliers mapper that takes as a parameter a label and returns 1 mapping (it only uses existing supplier names due to 
+			the process to create the mappings has been made off-line using Pyton).</p>
+			<ul>
+			<li>The URL to query the REST the service is: <em>%APP_URL%/services/mapping/supplier?label=param</em>
+			<li>Local example: <a href="./services/mapping/supplier?label=Oracle Australia Pty Limited">Search for "Oracle Australia Pty Limited"</a>
+			</li>			
+			<li>Remote example: <a href="http://pscs-portal.herokuapp.com/services/mapping/supplier?label=Oracle Australia Pty Limited">http://pscs-portal.herokuapp.com/services/mapping/supplier?label=Oracle Australia Pty Limited</a>
+			</li>
+			</ul>		
+		</li>
+		
+	</ul>
+	<h2>Resources</h2>
+	<ul>
+	<li><a href="https://dl.dropboxusercontent.com/u/14450306/pscs-0.1-SNAPSHOT.war">WAR application</a> to be deployed locally (26MB)</li>
+	<li><a href="https://dl.dropboxusercontent.com/u/14450306/pscs-portal-client.tgz">Java REST test client (Maven project)</a> with two Junit tests to query the REST service (3,8 kB)</li>
+	</ul>
+	<h2>Author</h2>	
+	<p>This code has been made with the purpose of unifying descriptions and codes in public contracts and 
+	supplier names in the case of Australia.</p>
+	<p>For any comment or suggestion, please send en email to <a href="mailto:chema.ar@gmail.com">Jose M Alvarez.</a>
+	<p>&copy;<small>Thessaloniki, Greece, 2013</small></p>
 </body>
 </html>
