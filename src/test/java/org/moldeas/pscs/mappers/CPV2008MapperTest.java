@@ -8,6 +8,7 @@ import java.util.List;
 import org.junit.Test;
 import org.moldeas.common.loader.resources.FilesResourceLoader;
 import org.moldeas.common.loader.resources.ResourceLoader;
+import org.moldeas.pscs.to.PSCMappingTO;
 import org.moldeas.pscs.to.PSCTO;
 
 
@@ -31,5 +32,18 @@ public class CPV2008MapperTest {
 		CPV2008Mapper cpv2008mapper = new CPV2008Mapper(loader);
 		assertEquals(3, cpv2008mapper.createMappings(targets).size());
 	}
+	
+		public void testMappingFail(){
+			PSCTO from = new PSCTO();
+			from.setUri("http://moldeas.org/p1");
+			from.setPrefLabel("COMMERCIAL AND INSTITUTIONAL BUILDING CONSTRUCTION RESEARCH AND DEVELOPMENT IN THE PHYSICAL, ENGINEERING, AND LIFE SCIENCES (EXCEPT BIOTECHNOLOGY)");
+			List<PSCTO> targets = new LinkedList<PSCTO>();
+			targets.add(from);
+			ResourceLoader loader = new FilesResourceLoader(new String[]{CPV2008Mapper.getSource()});
+			CPV2008Mapper cpv2008mapper = new CPV2008Mapper(loader);
+			List<PSCMappingTO> result = cpv2008mapper.createMappings(targets);
+			assertEquals(3, result.size());
+		}
+		
 
 }
