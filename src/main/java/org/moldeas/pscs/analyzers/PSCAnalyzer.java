@@ -564,7 +564,7 @@ public class PSCAnalyzer extends Analyzer{
 	   // result = new SpecialCharsFilter(result);
 	    result = new LowerCaseFilter(result);
 	    result = tf.create(result);
-	    result = new LengthFilter(result,1,20);
+	    result = new LengthFilter(result,1,200);
 	    result = df.create(result);	    
 	    result = new StopFilter(result, createStopWordsSet());	    
 	    result = new PluralFilter(result);	    

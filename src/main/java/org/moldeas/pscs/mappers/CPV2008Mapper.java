@@ -15,8 +15,13 @@ import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexDeletionPolicy;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.KeepOnlyLastCommitDeletionPolicy;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.FuzzyLikeThisQuery;
+import org.apache.lucene.search.FuzzyQuery;
+import org.apache.lucene.search.FuzzyTermEnum;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -152,6 +157,11 @@ public class CPV2008Mapper implements PSCMapper {
 				String prefLabel = pscTO.getPrefLabel();
 				ScoreDoc[] scoreDocs = fetchSearchResults(
 						createQueryFromString(CPV2008Mapper.cleanPrefLabel(prefLabel)), indexSearcher, 3);
+				//If no result then fuzzy query
+				if (scoreDocs.length == 0){
+					scoreDocs = fetchSearchResults(
+							createFuzzyQueryFromString(CPV2008Mapper.cleanPrefLabel(prefLabel)), indexSearcher, 3);
+				}
 				for(int i = 0; i<scoreDocs.length;i++){
 					Document doc = indexSearcher.doc(scoreDocs[i].doc);
 					String uriTO = doc.getField(MappingConstants.MAPPER_FIELD_URI).stringValue();
@@ -181,9 +191,18 @@ public class CPV2008Mapper implements PSCMapper {
 		QueryParser parser = new QueryParser(MAPPER_FIELD_PREF_LABEL,
 				new PSCAnalyzer());
 		parser.setDefaultOperator(QueryParser.Operator.OR);
-
-		return parser.parse(QueryParser.escape(q));
+		Query query = parser.parse(QueryParser.escape(q));
+		return query;
+		
 	}
+
+	public static Query createFuzzyQueryFromString(String q) throws ParseException {		
+		FuzzyLikeThisQuery flt=new FuzzyLikeThisQuery(50,new PSCAnalyzer()); 
+		flt.addTerms(q, MAPPER_FIELD_PREF_LABEL, 0.75f,	FuzzyQuery.defaultPrefixLength); 
+		return flt;
+	}
+	
+	
 //
 //	//FIXME: Does not work
 //	public static Query createTermQueryFromString(String key, String q) throws ParseException {		
