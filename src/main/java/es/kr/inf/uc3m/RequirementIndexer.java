@@ -30,7 +30,7 @@ import org.moldeas.pscs.to.PSCMappingTO;
 import org.moldeas.pscs.to.PSCTO;
 
 public class RequirementIndexer {
-	private static final int MAX_MATCHES = 100;
+	private static final int MAX_MATCHES = 20;
 	private static final String ID_REQUIREMENT = "id";
 	private static final String TEST_REQUIREMENT = "text";
 	RAMDirectory idx;
@@ -76,11 +76,14 @@ public class RequirementIndexer {
 
 
 	public List<MappingRequirementTO> createMappings(RequirementTO requirement){
+		return createMappings(requirement.id, requirement.text);
+	}
+
+	public List<MappingRequirementTO> createMappings(String from, String textRequirement){
 		List<MappingRequirementTO> mappings = new LinkedList<MappingRequirementTO>();		
 		//FIXME: to optimize indexsearcher no delegate call
 		try {
 			IndexSearcher indexSearcher = new IndexSearcher(this.idx);		
-			String textRequirement = requirement.text;
 			ScoreDoc[] scoreDocs = fetchSearchResults(
 					createQueryFromString(cleanRequirement(textRequirement)), indexSearcher, MAX_MATCHES);
 			//If no result then fuzzy query
@@ -92,7 +95,7 @@ public class RequirementIndexer {
 				Document doc = indexSearcher.doc(scoreDocs[i].doc);
 				String idTo = doc.getField(ID_REQUIREMENT).stringValue();
 				MappingRequirementTO mapping = new MappingRequirementTO();
-				mapping.from = requirement.id;
+				mapping.from = from;
 				mapping.to = idTo;
 				mapping.confidence = scoreDocs[i].score;
 				mappings.add(mapping);
@@ -106,7 +109,7 @@ public class RequirementIndexer {
 
 		return mappings;
 	}
-
+	
 	public static ScoreDoc[] fetchSearchResults(Query query, Searcher indexSearcher, int n ){
 		try{
 			TopScoreDocCollector collector = TopScoreDocCollector.create(n, true);

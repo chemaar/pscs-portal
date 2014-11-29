@@ -88,6 +88,11 @@ public class CPV2008DAOImpl {
 					current.getBroaders().add(new PSCTO(iterBroaders.next().asResource().getURI()));
 				}
 				
+				NodeIterator iterExactMatches = model.listObjectsOfProperty(r, model.getProperty(PSCConstants.SKOS_EXACT_MATCH));
+				while (iterExactMatches.hasNext()){
+					current.getExactMatches().add(new PSCTO(iterExactMatches.next().asResource().getURI()));
+				}
+				
 				logger.debug("Loaded "+current);
 				
 				if(current.getType().endsWith(PSCConstants.HTTP_PURL_ORG_WESO_CPV_DEF_DIVISION)){
@@ -123,6 +128,8 @@ public class CPV2008DAOImpl {
 		}
 	}
 
+
+	
 	public Map<String, PSCTO> getDivisions() {
 		return divisions;
 	}

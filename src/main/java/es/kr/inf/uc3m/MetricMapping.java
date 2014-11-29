@@ -2,8 +2,8 @@ package es.kr.inf.uc3m;
 
 public class MetricMapping {
 
-	double precision;
-	double recall;
+	double precision = 1.0;
+	double recall = 1.0;
 	public double getPrecision() {
 		return precision;
 	}

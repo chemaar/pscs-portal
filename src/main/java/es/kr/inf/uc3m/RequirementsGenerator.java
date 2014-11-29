@@ -16,7 +16,7 @@ import org.moldeas.pscs.to.PSCTO;
 
 public class RequirementsGenerator {
 
-	private static final int MAX_STAKEHOLDER_SPECIFICATIONS = 1;
+	public static final int MAX_STAKEHOLDER_SPECIFICATIONS = 30;
 
 	public static void main(String []args) throws FileNotFoundException{
 		Random rand = new Random();
@@ -38,7 +38,7 @@ public class RequirementsGenerator {
 		FilesResourceLoader resourceLoader = new FilesResourceLoader(
 				new String[]{
 						"cpv/cpv-2008.ttl"
-						//,"cpv/cpv-2003.ttl"
+						,"cpv/cpv-2003.ttl"
 				}
 				);
 		CPV2008DAOImpl daoCPV2008 = new CPV2008DAOImpl(resourceLoader);
@@ -81,7 +81,7 @@ public class RequirementsGenerator {
 				if(!stakeholderRequirements.contains(pscTO.getUri())){
 					//3.3.3 Pick up a pattern
 					//3.3.4 Generate requirement
-					stakeholderSpec.println("R"+i+"#"+textStakholderRequirement);
+					stakeholderSpec.println("R"+i+"#"+textStakholderRequirement+"#"+pscTO.getUri());
 					stakeholderRequirements.add(textStakholderRequirement);
 					//For each class, category or mapping or this PSCTO generate a system requirement
 					List<PSCTO> allNarrowers = collect(pscTO);
@@ -110,6 +110,24 @@ public class RequirementsGenerator {
 						}
 						
 					}
+					//System requirements with matches
+					List<PSCTO> exactMatches = pscTO.getExactMatches();
+					for(int m =0;m<exactMatches.size();m++){
+						PSCTO match = daoCPV2008.cpv2008.get(exactMatches.get(m).getUri());
+						String exactMatchDescription =match.getPrefLabel();
+						String exactMatchTypeLabel =match.getTypeLabel();
+						String boilerPlateSystem = getRandomElement(systemBoilerPlates,rand);
+						String actionSystem = getRandomElement(systemActions,rand);
+						String textSystemRequirement = String.format(boilerPlateSystem, exactMatchDescription, exactMatchTypeLabel, actionSystem); 
+						//3.3.4 Generate requirement
+						if(!systemRequirements.contains(textSystemRequirement)){
+							systemSpec.println("SR"+nsystemrequirement+"#"+textSystemRequirement);
+							systemRequirements.add(textSystemRequirement);
+							nsystemrequirement++;
+							mappings.println("R"+i+"#"+"SR"+nsystemrequirement);
+						}
+					}
+					
 					//systemRequirements.clear();
 					//stakeholderRequirements.add(pscTO.getUri());
 					i++;

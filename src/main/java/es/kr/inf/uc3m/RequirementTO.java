@@ -5,6 +5,7 @@ public class RequirementTO {
 	String id;
 	String text;
 	String type;
+	String cpvElement;
 	public String getId() {
 		return id;
 	}
@@ -28,6 +29,12 @@ public class RequirementTO {
 		this.id = id;
 		this.text = text;
 		this.type = type;
+	}
+	public String getCpvElement() {
+		return cpvElement;
+	}
+	public void setCpvElement(String cpvElement) {
+		this.cpvElement = cpvElement;
 	}
 	
 	
